@@ -50,11 +50,8 @@
 </template>
 
 <script>
-
 import Hello from './components/Hello'
-
 import Firebase from 'firebase'
-
 let config = {
   apiKey: "AIzaSyCRdssTYpYa_NaCupKxMSZ2MTSw1Cf9tuI",
   authDomain: "miko-quir.firebaseapp.com",
@@ -63,11 +60,9 @@ let config = {
   storageBucket: "miko-quir.appspot.com",
   messagingSenderId: "248651513243"
 }
-
 let app = Firebase.initializeApp(config);
 let db = app.database();
 let compras = db.ref('compras');
-
 export default {
   name: 'App',
   firebase: {
@@ -83,18 +78,37 @@ export default {
   },
   methods:{
     agregar: function() {
-      compras.push(this.compra_nueva);
+
+      compras.push(this.compra_nueva, function(error){
+        if (error){
+          toastr.error('Error al intentar agregar el registro.', 'Aviso');
+        }else{          
+          toastr.success('Registro agregado correctamente.', 'Aviso');
+        }
+      });
       this.compra_nueva.nombre = '';
-      this.compra_nueva.cantidad = '';
+      this.compra_nueva.cantidad = ''; 
     },
-    modificar: function(p_compra){
+    modificar: function(p_compra){      
       compras.child(p_compra['.key']).set({
         nombre: p_compra.nombre,
         cantidad: p_compra.cantidad
-      });
+      }, function(error){
+        if (error){
+          toastr.error('Error al intentar modificar el registro.', 'Aviso');
+        }else{          
+          toastr.success('Registro modificado correctamente.', 'Aviso');
+        }
+      });      
     },
     eliminar: function(p_compra){
-      compras.child(p_compra['.key']).remove();
+      compras.child(p_compra['.key']).remove(function(error){
+        if (error){
+          toastr.error('Error al intentar eliminar el registro.', 'Aviso');
+        }else{          
+          toastr.success('Registro eliminado correctamente.', 'Aviso');
+        }
+      });      
     },
     validarCompra: function(p_compra){
       return (
@@ -104,28 +118,24 @@ export default {
     }
   }
 }
-
 </script>
 
 <style>
 html {
   height: 100%;
 }
-
 body {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
 }
-
 #app {
   color: #2c3e50;
   margin-top: -100px;
   max-width: 600px;
   font-family: Source Sans Pro, Helvetica, sans-serif;
 }
-
 #app a .glyphicon-plus, #app a .glyphicon-ok {
   color: #42b983;
   text-decoration: none;
@@ -133,7 +143,6 @@ body {
 #app a .glyphicon-remove {
   color: #ff0000;
 }
-
 .logo {
   width: 100px;
   height: 100px
