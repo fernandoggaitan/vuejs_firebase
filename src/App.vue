@@ -4,7 +4,7 @@
       <h1> Lista de compras </h1>
     </div>
     <form>
-      <table class="table table-striped">
+      <table class="table table-responsive">
         <thead>
           <tr>
             <th> Nombre </th>
@@ -13,11 +13,21 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="c in compras">
-            <td> {{ c.nombre }} </td>
-            <td> {{ c.cantidad }} </td>
+          <tr v-for="compra in compras">
             <td>
-              <button class="btn btn-danger" v-on:click="eliminar(c)"> Eliminar </button>
+              <input type="text" class="form-control" placeholder="Ingrese el nombre del producto" v-model="compra.nombre" /> 
+            </td>
+            <td>
+              <input type="number" class="form-control" placeholder="Ingrese la cantidad" v-model="compra.cantidad" /> 
+            </td>
+            <td>
+              <a href="javascript:void(0);" title="Modificar" v-if="validarCompra(compra)" v-on:click="modificar(compra)">
+                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+              </a>
+              |
+              <a href="javascript:void(0);" title="Eliminar" v-on:click="eliminar(compra)">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+              </a>
             </td>
           </tr>
           <tr>
@@ -28,7 +38,9 @@
               <input type="number" class="form-control" placeholder="Ingrese la cantidad" v-model="compra_nueva.cantidad" />
             </td>
             <td>
-              <button class="btn btn-success" v-bind:disabled="!compra_nueva_validada" v-on:click="agregar()"> Agregar </button>
+              <a href="javascript:void(0);" title="Agregar" v-if="validarCompra(compra_nueva)" v-on:click="agregar()">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+              </a>
             </td>
           </tr>
         </tbody>
@@ -69,22 +81,26 @@ export default {
       }
     }
   },
-  computed:{
-    compra_nueva_validada: function(){
-      return (
-        this.compra_nueva.nombre.split(' ').join('') != '' &&
-        !isNaN(parseInt(this.compra_nueva.cantidad, 10))
-      );
-    }
-  },
   methods:{
     agregar: function() {
       compras.push(this.compra_nueva);
       this.compra_nueva.nombre = '';
       this.compra_nueva.cantidad = '';
     },
+    modificar: function(p_compra){
+      compras.child(p_compra['.key']).set({
+        nombre: p_compra.nombre,
+        cantidad: p_compra.cantidad
+      });
+    },
     eliminar: function(p_compra){
       compras.child(p_compra['.key']).remove();
+    },
+    validarCompra: function(p_compra){
+      return (
+        p_compra.nombre.split(' ').join('') != '' &&
+        !isNaN(parseInt(p_compra.cantidad, 10))
+      );
     }
   }
 }
@@ -110,9 +126,12 @@ body {
   font-family: Source Sans Pro, Helvetica, sans-serif;
 }
 
-#app a {
+#app a .glyphicon-plus, #app a .glyphicon-ok {
   color: #42b983;
   text-decoration: none;
+}
+#app a .glyphicon-remove {
+  color: #ff0000;
 }
 
 .logo {
