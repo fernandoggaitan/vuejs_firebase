@@ -9,7 +9,7 @@
           <tr>
             <th> Nombre </th>
             <th> Cantidad </th>
-            <td>  </td>
+            <th>  </th>
           </tr>
         </thead>
         <tbody>
