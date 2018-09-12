@@ -64,12 +64,7 @@
 import Firebase from 'firebase'
 
 let config = {
-  apiKey: "AIzaSyCRdssTYpYa_NaCupKxMSZ2MTSw1Cf9tuI",
-  authDomain: "miko-quir.firebaseapp.com",
-  databaseURL: "https://miko-quir.firebaseio.com",
-  projectId: "miko-quir",
-  storageBucket: "miko-quir.appspot.com",
-  messagingSenderId: "248651513243"
+  //TU CONFIGURACIÓN
 }
 let app = Firebase.initializeApp(config);
 let db = app.database();
